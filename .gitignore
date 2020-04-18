@@ -1,0 +1,7 @@
+*.npy
+*.pickle
+*.pyc
+a2/utils/datasets/
+*/__pycache__
+*.idea
+
