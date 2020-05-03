@@ -1,3 +1,4 @@
+.DS_Store
 *.npy
 *.pickle
 *.pyc
@@ -5,3 +6,5 @@ a2/utils/datasets/
 */__pycache__
 *.idea
 
+/a3/data/
+/a4/en_es_data/
