@@ -7,6 +7,18 @@ a2/utils/datasets/
 *.idea
 
 /a3/data/
+
 /a4/en_es_data/
 /a4/outputs/
 /a4/sanity_check_en_es_data/
+/a4/model.bin
+/a4/model.bin.optim
+/a4/.ipynb_checkpoints
+/a4/scratchpad.ipynb
+
+/a5/a5_public/en_es_data/
+/a5/a5_public/outputs/
+/a5/a5_public/sanity_check_en_es_data/
+/a5/.ipynb_checkpoints
+/a5/cnn_example_from_pytorch_book.ipynb
+/a5/Untitled.ipynb
