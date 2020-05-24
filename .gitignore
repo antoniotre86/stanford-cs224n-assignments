@@ -22,3 +22,5 @@ a2/utils/datasets/
 /a5/.ipynb_checkpoints
 /a5/cnn_example_from_pytorch_book.ipynb
 /a5/Untitled.ipynb
+/a5/a5_public/model.bin
+/a5/a5_public/model.bin.optim

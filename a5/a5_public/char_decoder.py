@@ -36,6 +36,12 @@ class CharDecoder(nn.Module):
         ### YOUR CODE HERE for part 2a
         ### TODO - Implement the forward pass of the character decoder.
 
+        x = self.decoderCharEmb(input)
+        h, dec_hidden_out = self.charDecoder(x, dec_hidden)
+        s = self.char_output_projection(h)
+
+        return s, dec_hidden_out
+
         ### END YOUR CODE
 
     def train_forward(self, char_sequence, dec_hidden=None):
@@ -53,6 +59,12 @@ class CharDecoder(nn.Module):
         ###       - char_sequence corresponds to the sequence x_1 ... x_{n+1} (e.g., <START>,m,u,s,i,c,<END>). Read the handout about how to construct input and target sequence of CharDecoderLSTM.
         ###       - Carefully read the documentation for nn.CrossEntropyLoss and our handout to see what this criterion have already included:
         ###             https://pytorch.org/docs/stable/nn.html#crossentropyloss
+
+        s, dec_hidden_out = self.forward(char_sequence[:-1, :], dec_hidden)  # (length-1, batch_size, vocab_size), ...
+        x_output = char_sequence[1:, :]
+        loss_f = nn.CrossEntropyLoss(reduction='sum', ignore_index=self.target_vocab.char_pad)
+        loss = loss_f(s.view(-1, len(self.target_vocab.char2id)), x_output.view(-1))
+        return loss
 
         ### END YOUR CODE
 
@@ -75,6 +87,30 @@ class CharDecoder(nn.Module):
         ###      - You may find torch.argmax or torch.argmax useful
         ###      - We use curly brackets as start-of-word and end-of-word characters. That is, use the character '{' for <START> and '}' for <END>.
         ###        Their indices are self.target_vocab.start_of_word and self.target_vocab.end_of_word, respectively.
+        start_token_idx = self.target_vocab.start_of_word
+        end_token_idx = self.target_vocab.end_of_word
+        batch_size = initialStates[0].shape[1]
+        current_char_idx = torch.tensor([[start_token_idx]*batch_size], dtype=torch.long, device=device)
+        output_char_idx = []
+        h_t = initialStates[0].clone()
+        c_t = initialStates[1].clone()
+        for t in range(max_length):
+            s_t, (h_t, c_t) = self.forward(current_char_idx, (h_t, c_t))
+            current_char_idx = s_t.argmax(dim=2)
+            output_char_idx.append(current_char_idx)
+        output_char_idx = torch.cat(output_char_idx, 0).transpose(1,0)
+        decodedWords = []
+        for o_i in output_char_idx.split(1, 0):
+            w_i = ''
+            for i in o_i.split(1, 1):
+                c_i = i[0][0].item()
+                if c_i == end_token_idx:
+                    break
+                else:
+                    w_i += self.target_vocab.id2char[c_i]
+            decodedWords.append(w_i)
+
+        return decodedWords
 
         ### END YOUR CODE
 

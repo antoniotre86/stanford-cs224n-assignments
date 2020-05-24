@@ -156,6 +156,14 @@ def question_2c_sanity_check(decoder):
     decodedWords = decoder.decode_greedy(initialStates, device)
     assert (len(decodedWords) == BATCH_SIZE), "Length of decodedWords should be {} but is: {}".format(BATCH_SIZE,
                                                                                                       len(decodedWords))
+
+    inpt1 = torch.randn(1, BATCH_SIZE, HIDDEN_SIZE, dtype=torch.float)
+    initialStates = (inpt1, inpt1)
+    device = decoder.char_output_projection.weight.device
+    decodedWords = decoder.decode_greedy(initialStates, device)
+    assert (len(decodedWords) == BATCH_SIZE), "Length of decodedWords should be {} but is: {}".format(BATCH_SIZE,
+                                                                                                      len(decodedWords))
+
     print("Sanity Check Passed for Question 2c: CharDecoder.decode_greedy()!")
     print("-" * 80)
 
